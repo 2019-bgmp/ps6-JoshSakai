@@ -1,0 +1,9 @@
+#all stats have checked out.
+Max Contig Length = 21.0
+Number of contigs = 4
+Mean contig length = 13.5
+Total genome length = 54.0
+N50 = 16.0
+Coverage = 2.7
+# Contig Length 	 Number of Contigs in this Category
+0.0 	 4
