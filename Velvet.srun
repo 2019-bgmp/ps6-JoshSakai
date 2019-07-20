@@ -1,0 +1,48 @@
+#!/bin/bash
+
+#SBATCH --account=bgmp          ### SLURM account which will be charged for the job
+#SBATCH --partition=bgmp        ### Partition (like a queue in PBS)
+#SBATCH --job-name=PS6_part2      ### Job Name
+#SBATCH --output=PS6_part2.out         ### File in which to store job output
+#SBATCH --error=PS6_part2.err          ### File in which to store job error messages
+#SBATCH --time=0-08:00:00       ### Wall clock time limit in Days-HH:MM:SS
+#SBATCH --nodes=1               ### Node count required for the job
+#SBATCH --ntasks-per-node=1     ### Nuber of tasks to be launched per Node
+#SBATCH --cpus-per-task=2       ### Number of cpus (cores) per task
+
+conda deactivate
+conda deactivate
+conda deactivate
+conda deactivate
+conda deactivate
+
+conda activate bgmp_py3
+
+#$fh1=/home/jsakai/bgmp/ps6-JoshSakai/test_800_3_PE5_interleaved.fq_1
+
+fh1=/projects/bgmp/shared/Bi621/800_3_PE5_interleaved.fq_1
+fh2=/projects/bgmp/shared/Bi621/800_3_PE5_interleaved.fq_2
+fh3=/projects/bgmp/shared/Bi621/800_3_PE5_interleaved.fq.unmatched 
+
+# make 'CATEGORIES=4' 'MAXKMERLENGTH=50' 'OPENMP=1' 'LONGSEQUENCES=1' 'BUNDLEDZLIB=1'
+
+# mkdir -p /bin
+
+# cp velvetg velveth /bin
+
+
+/usr/bin/time -v velveth kmer31_velvet_out/ 31 -fastq -shortPaired $fh1 $fh2 -short $fh3
+/usr/bin/time -v velveth kmer41_velvet_out/ 41 -fastq -shortPaired $fh1 $fh2 -short $fh3
+/usr/bin/time -v velveth kmer49_velvet_out/ 49 -fastq -shortPaired $fh1 $fh2 -short $fh
+/usr/bin/time -v velveth kmer49_20x_velvet_out/ 49 -fastq -shortPaired $fh1 $fh2 -short $fh3
+/usr/bin/time -v velveth kmer49_60x_velvet_out/ 49 -fastq -shortPaired $fh1 $fh2 -short $fh3
+/usr/bin/time -v velveth kmer49_auto_velvet_out/ 49 -fastq -shortPaired $fh1 $fh2 -short $fh3
+/usr/bin/time -v velveth kmer49_auto_min500_velvet_out/ 49 -fastq -shortPaired $fh1 $fh2 -short $fh3
+
+/usr/bin/time -v velvetg kmer41_velvet_out/ -exp_cov 47.23567949999999999906 -ins_length 76.79104993766991811217
+/usr/bin/time -v velvetg kmer31_velvet_out/ -exp_cov 60.07458449999999999929 -ins_length 76.79104993766991811217
+/usr/bin/time -v velvetg kmer49_velvet_out/ -exp_cov 36.96455549999999999926 -ins_length 76.79104993766991811217
+/usr/bin/time -v velvetg kmer49_20x_velvet_out/ -exp_cov 36.96455549999999999926 -ins_length 76.79104993766991811217 -cov_cutoff 20
+/usr/bin/time -v velvetg kmer49_60x_velvet_out/ -exp_cov 36.96455549999999999926 -ins_length 76.79104993766991811217 -cov_cutoff 60
+/usr/bin/time -v velvetg kmer49_auto_velvet_out/ -ins_length 76.79104993766991811217 -cov_cutoff auto
+/usr/bin/time -v velvetg kmer49_auto_min500_velvet_out/ -ins_length 76.79104993766991811217 -cov_cutoff auto -min_contig_lgth 500
